@@ -1,0 +1,41 @@
+{
+  "name" : "mall-customer-etl-job",
+  "jobMode" : "VISUAL",
+  "description" : "",
+  "role" : "arn:aws:iam::637423651300:role/GlueMallCustomerRole",
+  "executionProperty" : {
+    "maxConcurrentRuns" : 1
+  },
+  "command" : {
+    "name" : "glueetl",
+    "scriptLocation" : "s3://mall-customer-data-lake/scripts/mall-customer-etl-job.py",
+    "pythonVersion" : "3"
+  },
+  "defaultArguments" : {
+    "--enable-metrics" : "true",
+    "--enable-spark-ui" : "true",
+    "--spark-event-logs-path" : "s3://mall-customer-data-lake/Logs-Glue/",
+    "--enable-job-insights" : "true",
+    "--enable-observability-metrics" : "true",
+    "--conf" : "spark.eventLog.rolling.enabled=true",
+    "--enable-glue-datacatalog" : "true",
+    "--job-bookmark-option" : "job-bookmark-disable",
+    "--job-language" : "python",
+    "--TempDir" : "s3://aws-glue-assets-637423651300-us-east-1/temporary/"
+  },
+  "maxRetries" : 0,
+  "allocatedCapacity" : 2,
+  "timeout" : 10,
+  "maxCapacity" : 2.0,
+  "glueVersion" : "5.0",
+  "numberOfWorkers" : 2,
+  "workerType" : "G.1X",
+  "executionClass" : "STANDARD",
+  "codeGenConfigurationNodes" : "{\"node-1776134233664\":{\"ApplyMapping\":{\"Inputs\":[\"node-1776132936974\"],\"Mapping\":[{\"Dropped\":false,\"FromPath\":[\"customerid\"],\"FromType\":\"string\",\"ToKey\":\"customerid\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"genre\"],\"FromType\":\"string\",\"ToKey\":\"genre\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"age\"],\"FromType\":\"string\",\"ToKey\":\"age\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"annual income (k$)\"],\"FromType\":\"string\",\"ToKey\":\"annual_income\",\"ToType\":\"string\"},{\"Dropped\":false,\"FromPath\":[\"spending score (1-100)\"],\"FromType\":\"string\",\"ToKey\":\"spending_score\",\"ToType\":\"string\"}],\"Name\":\"Change Schema\"}},\"node-1776132936974\":{\"S3CsvSource\":{\"AdditionalOptions\":{\"EnableSamplePath\":false,\"SamplePath\":\"s3://mall-customer-data-lake/raw/Mall_Customers.csv\"},\"Escaper\":\"\",\"Exclusions\":[],\"Name\":\"Amazon S3\",\"OptimizePerformance\":false,\"OutputSchemas\":[{\"Columns\":[{\"Name\":\"customerid\",\"Type\":\"string\"},{\"Name\":\"genre\",\"Type\":\"string\"},{\"Name\":\"age\",\"Type\":\"string\"},{\"Name\":\"annual income (k$)\",\"Type\":\"string\"},{\"Name\":\"spending score (1-100)\",\"Type\":\"string\"}]}],\"Paths\":[\"s3://mall-customer-data-lake/raw/Mall_Customers.csv\"],\"QuoteChar\":\"quote\",\"Recurse\":true,\"Separator\":\"comma\",\"WithHeader\":true}},\"node-1776134276303\":{\"S3GlueParquetTarget\":{\"AutoDataQuality\":{\"EvaluationContext\":\"EvaluateDataQuality_node1776132838656\",\"IsEnabled\":true},\"Compression\":\"snappy\",\"Inputs\":[\"node-1776134233664\"],\"Name\":\"Amazon S3\",\"NumberTargetPartitions\":\"0\",\"PartitionKeys\":[],\"Path\":\"s3://mall-customer-data-lake/processed/\",\"SchemaChangePolicy\":{\"EnableUpdateCatalog\":false}}}}",
+  "sourceControlDetails" : {
+    "provider" : "GITHUB",
+    "repository" : "mall-customer-aws-etl",
+    "branch" : "master",
+    "folder" : "mall-customer-etl-job"
+  }
+}
